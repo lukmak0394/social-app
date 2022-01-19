@@ -1,0 +1,12 @@
+.SignUp {
+    margin: auto;
+    max-width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.SignUp input,
+.SignUp button {
+    margin-bottom: 10px;
+    padding: 10px 5px;
+}
