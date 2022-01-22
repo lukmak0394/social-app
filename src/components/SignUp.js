@@ -1,39 +1,34 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import './css/Form.css';
 
 import axios from 'axios';
-import { clear } from "@testing-library/user-event/dist/clear";
 
 function SignUp() {
-    const userNameRef = useRef();
-    const eMailRef = useRef();
-    const passwordRef = useRef();
-    const repeatRef = useRef();
+
+    const [userName, setUserName] = useState('');
+    const [eMail, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repeat, setRepeat] = useState('');
 
     const [successMsg, setSuccessMsg] = useState('')
-    const [errorMsg, setErrorMsg] = useState('');
+
+    const [errors, setErrors] = useState('');
 
 
     function validate(event) {
         event.preventDefault();
 
-        let userName = userNameRef.current.value;
-        let eMail = eMailRef.current.value;
-        let password = passwordRef.current.value;
-        let repeat = repeatRef.current.value;
-
         let errors = false;
+
+        // Conditional rendering  https://reactjs.org/docs/conditional-rendering.html
 
         if (userName.trim() === '' || userName.length < 4 || userName.includes(' ')) {
             errors = true;
-        }
-        if (eMail.trim() === '' || eMail.includes(' ') || !eMail.includes('@')) {
+        } else if (eMail.trim() === '' || eMail.includes(' ') || !eMail.includes('@')) {
             errors = true;
-        }
-        if (password.trim() === '' || password.length < 6 || password.includes(' ')) {
+        } else if (password.trim() === '' || password.length < 6 || password.includes(' ')) {
             errors = true;
-        }
-        if (
+        } else if (
             !password.includes('!') &&
             !password.includes('#') &&
             !password.includes('@ ') && 
@@ -41,8 +36,7 @@ function SignUp() {
             !password.includes('%')
         ) {
             errors = true;
-        }
-        if (
+        } else if (
             !password.includes("0") &&
             !password.includes("1") &&
             !password.includes("2") &&
@@ -55,28 +49,27 @@ function SignUp() {
             !password.includes("9")
         ) {
             errors = true;
-        }
-        if (repeat !== password) {
+        } else if (repeat !== password) {
             errors = true;
-        }
-
-
-        if (errors === false) {
-            setErrorMsg('');
-            sendData();
         } else {
-            setErrorMsg('No way!');
+            errors = false;
+            if (errors === false) {
+                sendData();
+            } 
+        } 
+
+        if (errors === true) {
+            setErrors('No way')
         }
         
     }
 
-
     function sendData() {
 
         let newUser = {
-            username: userNameRef.current.value,
-            email: eMailRef.current.value,
-            password: passwordRef.current.value,
+            username: userName,
+            email: eMail,
+            password: password,
         }
 
         const headers = {
@@ -90,6 +83,10 @@ function SignUp() {
             { 'headers': headers })
         .then((req) => {
             setSuccessMsg(`Thank you ${newUser.username}. You have been signed up successfully!`)
+            setUserName('');
+            setEmail('');
+            setPassword('');
+            setRepeat('');
             console.log(req.data);  
         }).catch((error) => {
             console.error(error);
@@ -100,17 +97,20 @@ function SignUp() {
         <div className="wrapper">
             <h3>Let's Join Us!</h3>
             <form className="SignUp" onSubmit={validate}>
-                <input type="text" placeholder="Username" ref={userNameRef}/>
-                <input type="text" placeholder="E-mail" ref={eMailRef}/>
-                <input type="text" placeholder="Password" ref={passwordRef}/>
-                <input type="text" placeholder="Repeat Password" ref={repeatRef}/> 
+                <input type="text" placeholder="Username" value={userName} onChange={(event) => {setUserName(event.target.value)}}/>
+                <input placeholder="E-mail" value={eMail} onChange={(event) => setEmail(event.target.value)}/>
+                <input type="text" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                <input type="text" placeholder="Repeat Password" value={repeat} onChange={(event) => setRepeat(event.target.value)}/> 
                 <button type="submit">Sign Up</button>
-                <p>{errorMsg}</p>
-                <p>{successMsg}</p>
+                <span>{successMsg}</span>
+                {errors && <p>{errors}</p>}
             </form>
+            
         </div>
        
     );
 }
+
+
 
 export default SignUp;

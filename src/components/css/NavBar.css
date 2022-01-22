@@ -13,12 +13,16 @@
     margin: auto;
 }
 
+.main-nav .nav-list .nav-list-item,
 .main-nav .nav-list .nav-list-item a {
     text-decoration: none;
     font-size: 20px;
     color: black;
 }
 
+
+.main-nav .nav-list .nav-list-item:hover,
 .main-nav .nav-list .nav-list-item a:hover {
     color: red;
+    cursor: pointer;
 }
