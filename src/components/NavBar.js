@@ -10,7 +10,7 @@ function NavBar(props) {
             <nav className="main-nav">
                 <ul className="nav-list">
                     <li className="nav-list-item">
-                        <Link to="/Home">Home Page</Link>
+                        <Link to="/">Home Page</Link>
                     </li>
                     <li className="nav-list-item" onClick={props.logoutMethod}>Logout</li>
                 </ul>
@@ -21,7 +21,7 @@ function NavBar(props) {
             <nav className="main-nav">
                 <ul className="nav-list">
                     <li className="nav-list-item">
-                        <Link to="/Home">Home Page</Link>
+                        <Link to="/">Home Page</Link>
                     </li>
                     <li className="nav-list-item">
                         <Link to="/SignUp">Sign Up</Link>
@@ -36,3 +36,5 @@ function NavBar(props) {
 };
 
 export default NavBar;
+
+

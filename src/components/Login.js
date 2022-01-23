@@ -35,8 +35,6 @@ function Login(props) {
                 localStorage.setItem('user',JSON.stringify(req.data));
                 // W pamięci lokalnej został utworzony obiekt 'user' zawierający token, a teraz za pomocą propsów zostaje wywołana metoda sendTokenMethod, która od razu z poziomu komponentu Login ustawi stan userToken (czyli pobierze z pamięci lokalnej obiekt 'user'), dzięki czemu komponent NavBar, który korzysta z aktualnego stanu userToken będzie mógł zmienić wyświetlaną zawartość.
                 props.sendTokenMethod();
-                setMessage("Login successfull")
-                
             } else {
                 setMessage('Invalid username or password')
             }
@@ -50,8 +48,10 @@ function Login(props) {
             <input type="text" placeholder="Username" onChange={(event) => setUserName(event.target.value)}/>
             <input type="text" placeholder="Password" onChange={(event) => setPassword(event.target.value)}/>
             <button type="submit">Log In</button>
-            {message && <p>{message}</p>}
+            {message && <p>{message}</p>}     
         </form>
+       
+
 
     );
 }

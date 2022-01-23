@@ -31,32 +31,50 @@ function App() {
     axios.post(
       'https://akademia108.pl/api/social-app/user/login',
       { 'headers': headers })
-    .then((req) => {
-      console.log('Response received: ', req);
-      localStorage.removeItem('user');
-      setUserToken('');
+      .then((req) => {
+        console.log('Successfully logged out');
+        localStorage.removeItem('user');
+        setUserToken('');
     }).catch((error) => {
-      console.log('AXIOS ERROR: ', error);
+        console.log('AXIOS ERROR: ', error);
     })
 
   }
 
-  return (
-    <div className="App">
-      <h1>Social media app!</h1>
-      <Router>
-        <NavBar forwardToken={userToken} logoutMethod={logout}/>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="Home" element={<HomePage />} />
-          <Route path="Login" element={<Login sendTokenMethod={sendToken}/>} />
-          <Route path="SignUp" element={<SignUp />} />
-        </Routes>
-        <Outlet />
-        
-      </Router>
-    </div>
-  );
+  if (!userToken) {
+    return (
+      <div className="App">
+        <h1>Social media app!</h1>
+        <Router>
+          <NavBar forwardToken={userToken} logoutMethod={logout}/>
+          <Routes>
+            <Route path="/" element={<HomePage forwardToken={userToken}/>} />
+            <Route path="Login" element={<Login sendTokenMethod={sendToken}/>} />
+            <Route path="SignUp" element={<SignUp />} />
+          </Routes>
+          <Outlet />
+        </Router>
+      </div>
+    );
+  } else {
+    return (
+      <div className="App">
+        <h1>Social media app!</h1>
+        <Router>
+          <NavBar forwardToken={userToken} logoutMethod={logout}/>
+          <Routes>
+            <Route path="/" element={<HomePage forwardToken={userToken}/>} />
+            {/* Ten zabieg wykonałem po to aby po zalogowaniu się użytkownik był przekierowany od razu na stronę główną. Ponadto dzięki temu gdy ktoś "z palca" spróbuje wpisać ścieżkę signup lub login w przeglądarce to i tak zostanie przekierowany do strony głównej */}
+            <Route path="Login" element={<Navigate replace to="/"/>} />
+            <Route path="SignUp" element={<Navigate replace to="/"/>} />
+          </Routes>
+          <Outlet />
+        </Router>
+      </div>
+    );
+  }
+
+  
 }
 
 export default App;

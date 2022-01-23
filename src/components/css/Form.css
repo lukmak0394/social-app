@@ -35,3 +35,13 @@ form button:hover {
     background-color: #fff;
 }
 
+form .error-msg {
+    font-size: 12px;
+    font-style: italic;
+    color: red;
+}
+
+form .error-field {
+    background-color: red;
+    opacity: 0.5;
+}

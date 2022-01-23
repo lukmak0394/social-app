@@ -10,9 +10,12 @@ function SignUp() {
     const [password, setPassword] = useState('');
     const [repeat, setRepeat] = useState('');
 
-    const [successMsg, setSuccessMsg] = useState('')
+    const [nameError, setNameError] = useState('');
+    const [mailError, setMailError] = useState('');
+    const [passError, setPassError] = useState('');
+    const [repeatError, setRepeatError] = useState('');
 
-    const [errors, setErrors] = useState('');
+    const [successMsg, setSuccessMsg] = useState('')
 
 
     function validate(event) {
@@ -24,10 +27,15 @@ function SignUp() {
 
         if (userName.trim() === '' || userName.length < 4 || userName.includes(' ')) {
             errors = true;
-        } else if (eMail.trim() === '' || eMail.includes(' ') || !eMail.includes('@')) {
+            setNameError("Username can't be blank and shorter than 4 characters")
+        } 
+        if (eMail.trim() === '' || eMail.includes(' ') || !eMail.includes('@')) {
             errors = true;
-        } else if (password.trim() === '' || password.length < 6 || password.includes(' ')) {
+            setMailError("Mail can't be blank and must include @")
+        } 
+        if (password.trim() === '' || password.length < 6 || password.includes(' ')) {
             errors = true;
+            setPassError("Password can't be blank and be shorter than 6 characters")
         } else if (
             !password.includes('!') &&
             !password.includes('#') &&
@@ -36,6 +44,7 @@ function SignUp() {
             !password.includes('%')
         ) {
             errors = true;
+            setPassError("Password must include at least one special character !#@$%")
         } else if (
             !password.includes("0") &&
             !password.includes("1") &&
@@ -49,18 +58,16 @@ function SignUp() {
             !password.includes("9")
         ) {
             errors = true;
-        } else if (repeat !== password) {
-            errors = true;
-        } else {
-            errors = false;
-            if (errors === false) {
-                sendData();
-            } 
+            setPassError("Password must include at least one number 0-9")
         } 
-
-        if (errors === true) {
-            setErrors('No way')
-        }
+        if (repeat !== password) {
+            errors = true;
+            setRepeatError("Repeated password doesn't match password")
+        } 
+      
+        if (errors === false) {
+            sendData();
+        } 
         
     }
 
@@ -97,13 +104,16 @@ function SignUp() {
         <div className="wrapper">
             <h3>Let's Join Us!</h3>
             <form className="SignUp" onSubmit={validate}>
-                <input type="text" placeholder="Username" value={userName} onChange={(event) => {setUserName(event.target.value)}}/>
-                <input placeholder="E-mail" value={eMail} onChange={(event) => setEmail(event.target.value)}/>
-                <input type="text" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
-                <input type="text" placeholder="Repeat Password" value={repeat} onChange={(event) => setRepeat(event.target.value)}/> 
+                <input type="text" placeholder="Username" value={userName} onChange={(event) => {setUserName(event.target.value)}} onFocus={() => setNameError('')}/>
+                {nameError && <span className="error-msg">{nameError}</span>}
+                <input type="text" placeholder="E-mail" value={eMail} onChange={(event) => setEmail(event.target.value)} onFocus={() => setMailError('')}/>
+                {mailError && <span className="error-msg">{mailError}</span>}
+                <input type="text" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} onFocus={() => setPassError('')}/>
+                {passError && <span className="error-msg">{passError}</span>}
+                <input type="text" placeholder="Repeat Password" value={repeat} onChange={(event) => setRepeat(event.target.value)} onFocus={() => setRepeatError('')}/> 
+                {repeatError && <span className="error-msg">{repeatError}</span>}
                 <button type="submit">Sign Up</button>
                 <span>{successMsg}</span>
-                {errors && <p>{errors}</p>}
             </form>
             
         </div>
