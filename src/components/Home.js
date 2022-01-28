@@ -57,12 +57,32 @@ function HomePage(props) {
        getPosts();
     },[])
 
+    function deletePost(id) {
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + props.forwardToken.jwt_token,
+        }
+
+        axios.post(
+            'https://akademia108.pl/api/social-app/post/delete',
+            {post_id: id},
+            { 'headers': headers })
+            .then((req) => {
+                console.log(req.data)
+            }).catch((error) => {
+                console.log('AXIOS ERROR: ', error);
+            })
+
+    }
+
     return (
         
         <div className='home-page'>
             {props.forwardToken && <Recommended forwardToken={props.forwardToken} />}
             {props.forwardToken && <AddPost forwardToken={props.forwardToken} forwardPosts={posts} setPosts={setPosts}/>}
-            <Post forwardPosts={posts} forwardToken={props.forwardToken} />
+            <Post forwardPosts={posts} forwardToken={props.forwardToken} deletePost={deletePost}/>
             <button type="submit" onClick={getNextPosts}>Pobierz kolejne</button>
         </div>
     );
