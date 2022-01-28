@@ -3,13 +3,40 @@ import axios from 'axios';
 import './css/Home.css'
 
 import Post from './Post';
+import AddPost from './AddPost';
 
+import Recommended from './Recommended';
 
 function HomePage(props) {
 
     const [posts, setPosts] = useState([]);
 
+    function getNextPosts() {
+
+        const lastPostDate = posts[posts.length - 1].created_at;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+        
+        let postDate = {
+        date: lastPostDate,
+        }
+
+        axios.post(
+            'https://akademia108.pl/api/social-app/post/older-then',
+            postDate,
+            { 'headers': headers })
+            .then((req) => {
+                setPosts(posts.concat(req.data))
+            }).catch((error) => {
+                console.log('AXIOS ERROR: ', error);
+            })
+    }
+
     function getPosts() {
+        
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -25,16 +52,18 @@ function HomePage(props) {
             })
     }
 
-    // Google request how to run function sending data to api only once react
-    // https://stackoverflow.com/questions/53120972/how-to-call-loading-function-with-react-useeffect-only-once
-    // w useEffect wywołujemy naszą funkcję getPosts jako callback, a jako drugi argument useEffect przekazujemy pustą tablicę, dzięki czemu posty pobierane są tylko raz w momencie gdy komponent Home jest renderowany i przy zmianaach DOM. Gdy nie używałem tej metody to wysyłało się za dużo zapytań. Czemu?
+
     useEffect(() => {
-       getPosts()
+       getPosts();
     },[])
 
     return (
+        
         <div className='home-page'>
-            <Post forwardPosts={posts} forwardToken={props.forwardToken}/>
+            {props.forwardToken && <Recommended forwardToken={props.forwardToken} />}
+            {props.forwardToken && <AddPost forwardToken={props.forwardToken} forwardPosts={posts} setPosts={setPosts}/>}
+            <Post forwardPosts={posts} forwardToken={props.forwardToken} />
+            <button type="submit" onClick={getNextPosts}>Pobierz kolejne</button>
         </div>
     );
 }

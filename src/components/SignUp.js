@@ -17,22 +17,25 @@ function SignUp() {
 
     const [successMsg, setSuccessMsg] = useState('')
 
+    const validEmail = new RegExp (
+        '^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9].+[a-zA-Z]$'
+    );
 
     function validate(event) {
         event.preventDefault();
 
         let errors = false;
 
-        // Conditional rendering  https://reactjs.org/docs/conditional-rendering.html
 
         if (userName.trim() === '' || userName.length < 4 || userName.includes(' ')) {
             errors = true;
             setNameError("Username can't be blank and shorter than 4 characters")
         } 
-        if (eMail.trim() === '' || eMail.includes(' ') || !eMail.includes('@')) {
+        if (!validEmail.test(eMail)) {
             errors = true;
-            setMailError("Mail can't be blank and must include @")
-        } 
+            setMailError("Invalid Email");
+        }
+
         if (password.trim() === '' || password.length < 6 || password.includes(' ')) {
             errors = true;
             setPassError("Password can't be blank and be shorter than 6 characters")
@@ -90,10 +93,6 @@ function SignUp() {
             { 'headers': headers })
         .then((req) => {
             setSuccessMsg(`Thank you ${newUser.username}. You have been signed up successfully!`)
-            setUserName('');
-            setEmail('');
-            setPassword('');
-            setRepeat('');
             console.log(req.data);  
         }).catch((error) => {
             console.error(error);
@@ -106,13 +105,18 @@ function SignUp() {
             <form className="SignUp" onSubmit={validate}>
                 <input type="text" placeholder="Username" value={userName} onChange={(event) => {setUserName(event.target.value)}} onFocus={() => setNameError('')}/>
                 {nameError && <span className="error-msg">{nameError}</span>}
+
                 <input type="text" placeholder="E-mail" value={eMail} onChange={(event) => setEmail(event.target.value)} onFocus={() => setMailError('')}/>
                 {mailError && <span className="error-msg">{mailError}</span>}
+
                 <input type="text" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} onFocus={() => setPassError('')}/>
                 {passError && <span className="error-msg">{passError}</span>}
+
                 <input type="text" placeholder="Repeat Password" value={repeat} onChange={(event) => setRepeat(event.target.value)} onFocus={() => setRepeatError('')}/> 
                 {repeatError && <span className="error-msg">{repeatError}</span>}
+
                 <button type="submit">Sign Up</button>
+                
                 <span>{successMsg}</span>
             </form>
             
