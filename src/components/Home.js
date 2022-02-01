@@ -6,6 +6,8 @@ import Post from './Post';
 import AddPost from './AddPost';
 
 import Recommended from './Recommended';
+import Follows from './Follows';
+
 
 function HomePage(props) {
 
@@ -57,49 +59,15 @@ function HomePage(props) {
        getPosts();
     },[])
 
-    function deletePost(id) {
-
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + props.forwardToken.jwt_token,
-        }
-
-        axios.post(
-            'https://akademia108.pl/api/social-app/post/delete',
-            {post_id: id},
-            { 'headers': headers })
-            .then((req) => {
-                getPosts();
-            }).catch((error) => {
-                console.log('AXIOS ERROR: ', error);
-            })
-    }
-
-    function likePost(id) {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + props.forwardToken.jwt_token,
-        }
-
-        axios.post(
-            'https://akademia108.pl/api/social-app/post/like',
-            {post_id: id},
-            { 'headers': headers })
-            .then((req) => {
-                getPosts();
-            }).catch((error) => {
-                console.log('AXIOS ERROR: ', error);
-            })
-    }
+    
 
     return (
         
         <div className='home-page'>
             {props.forwardToken && <Recommended forwardToken={props.forwardToken} />}
+            {props.forwardToken && <Follows forwardToken={props.forwardToken} />}
             {props.forwardToken && <AddPost forwardToken={props.forwardToken} forwardPosts={posts} setPosts={setPosts}/>}
-            <Post forwardPosts={posts} forwardToken={props.forwardToken} deletePost={deletePost} likePost={likePost}/>
+            <Post forwardPosts={posts} forwardToken={props.forwardToken} getPosts={getPosts}/>
             <button type="submit" onClick={getNextPosts}>Pobierz kolejne</button>
         </div>
     );

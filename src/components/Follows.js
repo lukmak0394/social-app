@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import './css/Home.css'
 
 
-function Recommended(props) {
+function Follows(props) {
 
-    const [recommended, setRecommended] = useState([]);
+    const [followed, setFollowed] = useState([]);
 
-    function getRecommendations() {
+    function getFollows() {
 
         const headers = {
             'Content-Type': 'application/json',
@@ -17,17 +17,21 @@ function Recommended(props) {
         }
 
         axios.post(
-            'https://akademia108.pl/api/social-app/follows/recommendations',
+            'https://akademia108.pl/api/social-app/follows/allfollows',
             {},
             { 'headers': headers })
             .then((req) => {
-                setRecommended(req.data)
+                setFollowed(req.data);
             }).catch((error) => {
                 console.log('AXIOS ERROR: ', error);
             })
     }
 
-    function followUser(id) {
+    useEffect(() => {
+        getFollows();
+    },[])
+
+    function unfollowUser(id) {
 
         const headers = {
             'Content-Type': 'application/json',
@@ -40,36 +44,29 @@ function Recommended(props) {
         }
 
         axios.post(
-            'https://akademia108.pl/api/social-app/follows/follow',
+            'https://akademia108.pl/api/social-app/follows/disfollow',
             leaderId,
             { 'headers': headers })
             .then((req) => {
-                getRecommendations();
+                getFollows();
             }).catch((error) => {
                 console.log('AXIOS ERROR: ', error);
             })
     }
 
-    
-    
-    useEffect(() => {
-        getRecommendations();
-    },[])
-
-
-    let recoItems = recommended.map((recommended) => 
-        <li className='reco-item' key={recommended.id}>
-            <span>{recommended.username}</span>
-            <button onClick={() => {followUser(recommended.id)}}>Follow</button>
+    let followItems = followed.map((followed) => 
+        <li className='follow-item' key={followed.id}>
+            <span>{followed.username}</span>
+            <button onClick={() => {unfollowUser(followed.id)}}>Unfollow</button>
         </li>
     )
-
+    
     return (
-        <ul className='recommended'>
-            <span>Recommended users:</span>
-            {recoItems}
+        <ul className='followed'>
+            <span>Followed users:</span>
+            {followItems}
         </ul>
     )
 }
 
-export default Recommended;
+export default Follows;
