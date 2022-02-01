@@ -8,7 +8,8 @@ function Post(props) {
         <p>{post.user.username}</p>
         <p className='content'>{post.content}</p>
         <p>{ `Likes:  ${post.likes.length}`}</p>
-        <button onClick={() => {props.deletePost(post.id)}}>xxx</button>
+        {props.forwardToken && <button onClick={() => {props.deletePost(post.id)}}>Delete</button>}
+        {props.forwardToken && <button onClick={() => {props.likePost(post.id)}}>Like</button>}
     </div>)
     
     return (

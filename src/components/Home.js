@@ -70,11 +70,28 @@ function HomePage(props) {
             {post_id: id},
             { 'headers': headers })
             .then((req) => {
-                console.log(req.data)
+                getPosts();
             }).catch((error) => {
                 console.log('AXIOS ERROR: ', error);
             })
+    }
 
+    function likePost(id) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + props.forwardToken.jwt_token,
+        }
+
+        axios.post(
+            'https://akademia108.pl/api/social-app/post/like',
+            {post_id: id},
+            { 'headers': headers })
+            .then((req) => {
+                getPosts();
+            }).catch((error) => {
+                console.log('AXIOS ERROR: ', error);
+            })
     }
 
     return (
@@ -82,7 +99,7 @@ function HomePage(props) {
         <div className='home-page'>
             {props.forwardToken && <Recommended forwardToken={props.forwardToken} />}
             {props.forwardToken && <AddPost forwardToken={props.forwardToken} forwardPosts={posts} setPosts={setPosts}/>}
-            <Post forwardPosts={posts} forwardToken={props.forwardToken} deletePost={deletePost}/>
+            <Post forwardPosts={posts} forwardToken={props.forwardToken} deletePost={deletePost} likePost={likePost}/>
             <button type="submit" onClick={getNextPosts}>Pobierz kolejne</button>
         </div>
     );
