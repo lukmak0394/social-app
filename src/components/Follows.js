@@ -29,7 +29,7 @@ function Follows(props) {
 
     useEffect(() => {
         getFollows();
-    },[])
+    },[props.forwardReco])
 
     function unfollowUser(id) {
 

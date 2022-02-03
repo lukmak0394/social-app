@@ -21,7 +21,8 @@ function NavBar(props) {
           .then((req) => {
             console.log('Successfully logged out');
             localStorage.removeItem('user');
-            props.setUserTokenMethod('')
+            props.setUserTokenMethod('');
+            props.setShowLogin(false);
         }).catch((error) => {
             console.log('AXIOS ERROR: ', error);
         })

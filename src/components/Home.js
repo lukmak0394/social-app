@@ -4,9 +4,8 @@ import './css/Home.css'
 
 import Post from './Post';
 import AddPost from './AddPost';
-
+import Login from './Login';
 import Recommended from './Recommended';
-import Follows from './Follows';
 
 
 function HomePage(props) {
@@ -38,7 +37,6 @@ function HomePage(props) {
     }
 
     function getPosts() {
-        
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -56,18 +54,16 @@ function HomePage(props) {
 
 
     useEffect(() => {
-       getPosts();
+        getPosts();
     },[])
-
     
-
+    
     return (
-        
         <div className='home-page'>
-            {props.forwardToken && <Recommended forwardToken={props.forwardToken} />}
-            {props.forwardToken && <Follows forwardToken={props.forwardToken} />}
+            {!props.forwardToken ? props.showLogin ? <Login sendTokenMethod={props.sendTokenMethod} /> : false : false}
+            {props.forwardToken && <Recommended forwardToken={props.forwardToken} setUserToken={props.setUserToken}/>}
             {props.forwardToken && <AddPost forwardToken={props.forwardToken} forwardPosts={posts} setPosts={setPosts}/>}
-            <Post forwardPosts={posts} forwardToken={props.forwardToken} getPosts={getPosts}/>
+            <Post forwardPosts={posts} forwardToken={props.forwardToken} getPosts={getPosts} />
             <button type="submit" onClick={getNextPosts}>Pobierz kolejne</button>
         </div>
     );

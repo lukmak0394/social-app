@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 
 
 function Post(props) {
+
+    const [liked, setLiked] = useState()
 
     function deletePost(id) {
 
@@ -24,6 +26,7 @@ function Post(props) {
     }
 
     function likePost(id) {
+
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -35,6 +38,7 @@ function Post(props) {
             {post_id: id},
             { 'headers': headers })
             .then((req) => {
+                setLiked(true);
                 props.getPosts();
             }).catch((error) => {
                 console.log('AXIOS ERROR: ', error);
@@ -53,10 +57,19 @@ function Post(props) {
             {post_id: id},
             { 'headers': headers })
             .then((req) => {
+                setLiked(false);
                 props.getPosts();
             }).catch((error) => {
                 console.log('AXIOS ERROR: ', error);
             })
+    }
+
+    function switchLiked(id) {
+        if (liked) {
+            disLikePost(id);
+        } else {
+            likePost(id);
+        }
     }
 
     let postItems = props.forwardPosts.map((post) => 
@@ -66,8 +79,7 @@ function Post(props) {
         <p className='content'>{post.content}</p>
         <p>{ `Likes:  ${post.likes.length}`}</p>
         {props.forwardToken && <button onClick={() => {deletePost(post.id)}}>Delete</button>}
-        {props.forwardToken && <button onClick={() => {likePost(post.id)}}>Like</button>}
-        {props.forwardToken && <button onClick={() => {disLikePost(post.id)}}>Dislike</button>}
+        {props.forwardToken && <button onClick={() => {switchLiked(post.id)}}>React</button>}
     </div>)
     
     return (

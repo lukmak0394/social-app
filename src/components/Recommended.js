@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import Follows from './Follows';
+
+
 import './css/Home.css'
 
 
@@ -68,6 +71,7 @@ function Recommended(props) {
         <ul className='recommended'>
             <span>Recommended users:</span>
             {recoItems}
+            {props.forwardToken && <Follows forwardToken={props.forwardToken} forwardReco={recommended}/>}
         </ul>
     )
 }

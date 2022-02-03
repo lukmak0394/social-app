@@ -51,9 +51,6 @@ function Login(props) {
             {message && <p>{message}</p>}     
         </form>
        
-
-
     );
 }
-
 export default Login;
